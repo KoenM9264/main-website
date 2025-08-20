@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Koen Muller - Gallery</title>
-<link rel="stylesheet" href="style.css">
-
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -26,10 +25,11 @@
   <div id="gallery-grid" class="gallery-grid"></div>
 </section>
 
-<!-- Lightbox with close button -->
-<div id="lightbox">
-  <button id="lightbox-close">&times;</button>
-  <img id="lightbox-img" src="" alt="">
+<!-- Lightbox with close button and download -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+  <button id="lightbox-close" aria-label="Close lightbox">&times;</button>
+  <img id="lightbox-img" src="" alt="" />
+  <button id="lightbox-download" class="download-btn">Download</button>
 </div>
 
 <script>
@@ -45,41 +45,77 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const closeBtn = document.getElementById('lightbox-close');
+  const lightboxDownload = document.getElementById('lightbox-download');
 
-  // Generate gallery
+  // Generate gallery with thumbnails and download buttons
   images.forEach(img => {
-    const el = document.createElement('img');
-    el.src = img.thumb;
-    el.alt = img.alt;
-    el.loading = 'lazy';
-    el.addEventListener('click', () => {
-      lightboxImg.src = img.full;
-      lightboxImg.alt = img.alt;
-      lightbox.style.display = 'flex';
+    const figure = document.createElement('figure');
+
+    const thumbImg = document.createElement('img');
+    thumbImg.src = img.thumb;
+    thumbImg.alt = img.alt;
+    thumbImg.loading = 'lazy';
+    thumbImg.tabIndex = 0;
+    thumbImg.addEventListener('click', () => openLightbox(img));
+    thumbImg.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openLightbox(img);
+      }
     });
-    galleryGrid.appendChild(el);
+
+    const figcaption = document.createElement('figcaption');
+    figcaption.textContent = img.alt;
+
+    figure.appendChild(thumbImg);
+    figure.appendChild(figcaption);
+    galleryGrid.appendChild(figure);
   });
 
-  // Close lightbox function
+  async function openLightbox(img) {
+    lightboxImg.src = img.full;
+    lightboxImg.alt = img.alt;
+    lightbox.style.display = 'flex';
+    closeBtn.focus();
+
+    lightboxDownload.onclick = async () => {
+      try {
+        const response = await fetch(img.full);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = img.alt.replace(/\s+/g, '_') + '.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        alert('Failed to download image.');
+        console.error(err);
+      }
+    };
+  }
+
   function closeLightbox() {
     lightbox.style.display = 'none';
     lightboxImg.src = '';
+    lightboxImg.alt = '';
   }
 
-  // Close on clicking outside image
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
+  closeBtn.addEventListener('click', closeLightbox);
 
-  // Close on Escape or X key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key.toLowerCase() === 'x') {
-      if (lightbox.style.display === 'flex') closeLightbox();
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
     }
   });
 
-  // Close button
-  closeBtn.addEventListener('click', () => closeLightbox());
+  document.addEventListener('keydown', (e) => {
+    if ((e.key === 'Escape' || e.key.toLowerCase() === 'x') && lightbox.style.display === 'flex') {
+      closeLightbox();
+    }
+  });
 });
 </script>
 
