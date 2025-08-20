@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koen Muller - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <span class="logo">Koen M.</span>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero / Landing Card -->
+  <section id="home" class="hero">
+    <div class="card">
+      <h1>Koen Muller</h1>
+      <p>🏃 Track · ⛷️ Ski · 🎥 Film</p>
+      <div class="links">
+        <a href="https://instagram.com/koen_ski_run_film" target="_blank">Instagram</a>
+        <a href="https://youtube.com/YOUR_CHANNEL" target="_blank">YouTube</a>
+        <a href="mailto:koen@koenm.ca">Email</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Koen M.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

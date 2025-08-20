@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Koen Muller - Gallery</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+      <span class="logo">Koen M.</span>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+</nav>
+
+<section id="gallery">
+  <h2>Gallery</h2>
+  <p>Click an image to preview fullscreen.</p>
+  <div id="gallery-grid" class="gallery-grid"></div>
+</section>
+
+<!-- Lightbox with close button -->
+<div id="lightbox">
+  <button id="lightbox-close">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const images = [
+    {thumb: 'images/thumb1.jpg', full: 'https://www.topgear.com/sites/default/files/news-listicle/image/dg018_130clgtqm46n89ljrl6nug4ebog7a2r.jpg', alt:'Image 1'},
+    {thumb: 'images/thumb2.jpg', full: 'https://www.topgear.com/sites/default/files/news-listicle/image/dg018_130clgtqm46n89ljrl6nug4ebog7a2r.jpg', alt:'Image 2'},
+    {thumb: 'images/thumb3.jpg', full: 'https://www.topgear.com/sites/default/files/news-listicle/image/dg018_130clgtqm46n89ljrl6nug4ebog7a2r.jpg', alt:'Image 3'},
+    {thumb: 'images/thumb4.jpg', full: 'https://www.topgear.com/sites/default/files/news-listicle/image/dg018_130clgtqm46n89ljrl6nug4ebog7a2r.jpg', alt:'Image 4'}
+  ];
+
+  const galleryGrid = document.getElementById('gallery-grid');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeBtn = document.getElementById('lightbox-close');
+
+  // Generate gallery
+  images.forEach(img => {
+    const el = document.createElement('img');
+    el.src = img.thumb;
+    el.alt = img.alt;
+    el.loading = 'lazy';
+    el.addEventListener('click', () => {
+      lightboxImg.src = img.full;
+      lightboxImg.alt = img.alt;
+      lightbox.style.display = 'flex';
+    });
+    galleryGrid.appendChild(el);
+  });
+
+  // Close lightbox function
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lightboxImg.src = '';
+  }
+
+  // Close on clicking outside image
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Close on Escape or X key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key.toLowerCase() === 'x') {
+      if (lightbox.style.display === 'flex') closeLightbox();
+    }
+  });
+
+  // Close button
+  closeBtn.addEventListener('click', () => closeLightbox());
+});
+</script>
+
+</body>
+</html>

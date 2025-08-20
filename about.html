@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koen Muller - About</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <span class="logo">Koen M.</span>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section id="about">
+    <h2>About</h2>
+    <p>Hi, I’m Koen. I love running, skiing, and filming with my Dji Mini 4 Pro, Insta 360 X4, and Sony A7C II.</p>
+   <!-- <p>More text here</p> --> 
+  </section>
+
+  <footer>
+    © <span id="year"></span> Koen M.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
