@@ -29,43 +29,27 @@
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
   <button id="lightbox-close" aria-label="Close lightbox">&times;</button>
   <img id="lightbox-img" src="" alt="" />
-  <button id="lightbox-download" class="download-btn">Download</button>
+  <a id="lightbox-download" class="download-btn" download>Download</a>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const images = [
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20241006121240_0111_D.jpeg', full: 'https://cdn.koenm.ca/web/city_drone_a6g2.jpg', alt:'Image 1'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20241010213039_0147_D.jpeg', full: 'https://cdn.koenm.ca/web/northern_lights_drone_7gfd.jpg', alt:'Image 2'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20241201151829_0091_D.jpeg', full: 'https://cdn.koenm.ca/web/school_drone_t6h2.jpg', alt:'Image 3'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20250119150525_0192_D-HDR.jpeg', full: 'https://cdn.koenm.ca/web/city_drone_j732.jpg', alt:'Image 4'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20250503135014_0372_D.jpeg', full: 'https://cdn.koenm.ca/web/city_drone_5sg4.jpg', alt:'Image 5'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DJI_20250531234810_0011_D.jpeg', full: 'https://cdn.koenm.ca/web/northern_lights_drone_h56s.jpg', alt:'Image 6'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC00976.jpeg', full: 'https://cdn.koenm.ca/web/plant_sony_g6s5.jpg', alt:'Image 7'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC00980.jpeg', full: 'https://cdn.koenm.ca/web/plant_sony_g624.jpg', alt:'Image 8'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC01192.jpeg', full: 'https://cdn.koenm.ca/web/flags_sony.jpg', alt:'Image 9'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC01018.jpeg', full: 'https://cdn.koenm.ca/web/ferry_sony.jpg', alt:'Image 10'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC01232.jpeg', full: 'https://cdn.koenm.ca/web/sky_sony_g6h2.jpg', alt:'Image 11'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC01386.jpeg', full: 'https://cdn.koenm.ca/web/sky_sony_7g52.jpg.jpg', alt:'Image 12'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC02418.jpeg', full: 'https://cdn.koenm.ca/web/bench_sony_75s4.jpg', alt:'Image 13'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC02425.jpeg', full: 'https://cdn.koenm.ca/web/plant_sony_g523.jpg', alt:'Image 14'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC02427.jpeg', full: 'https://cdn.koenm.ca/web/plant_sony_5g22.jpg', alt:'Image 15'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC02433.jpeg', full: 'https://cdn.koenm.ca/web/bench_sony_6f42.jpg', alt:'Image 16'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC08894.jpeg', full: 'https://cdn.koenm.ca/web/plant_sony_a421.jpg', alt:'Image 17'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC09596.jpeg', full: 'https://cdn.koenm.ca/web/track_sony_76gh.jpg', alt:'Image 18'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC09801.jpeg', full: 'https://cdn.koenm.ca/web/track_sony_g52d.jpg', alt:'Image 19'},
-    {thumb: 'https://cdn.koenm.ca/cdn-cgi/image/width=300,quality=75,format=auto/originals/DSC09841.jpeg', full: 'https://cdn.koenm.ca/web/stars_sony_7g52.jpg', alt:'Image 20'}
-  ];
-
-
-
+document.addEventListener('DOMContentLoaded', async () => {
   const galleryGrid = document.getElementById('gallery-grid');
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const closeBtn = document.getElementById('lightbox-close');
   const lightboxDownload = document.getElementById('lightbox-download');
 
-  // Generate gallery with thumbnails and download buttons
+  // Fetch images from external JSON
+  let images = [];
+  try {
+    const response = await fetch('images.json');
+    images = await response.json();
+  } catch (err) {
+    console.error('Failed to load images.json', err);
+  }
+
+  // Generate gallery
   images.forEach(img => {
     const figure = document.createElement('figure');
 
@@ -91,28 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function openLightbox(img) {
-    lightboxImg.src = img.full;
+    lightboxImg.src = img.fullPreview || img.full;
     lightboxImg.alt = img.alt;
     lightbox.style.display = 'flex';
     closeBtn.focus();
 
-    lightboxDownload.onclick = async () => {
-      try {
-        const response = await fetch(img.full, {mode: 'cors'});
-        if (!response.ok) throw new Error('Network response was not ok');
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = img.alt.replace(/\s+/g, '_') + '.jpg';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        alert('Failed to download image: ' + error.message);
-      }
-    };
+    lightboxDownload.href = img.full;  // R2 or Worker URL
+    lightboxDownload.download = img.alt.replace(/\s+/g, '_') + '.jpg';
   }
 
   function closeLightbox() {
@@ -122,11 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   closeBtn.addEventListener('click', closeLightbox);
-
   lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      closeLightbox();
-    }
+    if (e.target === lightbox) closeLightbox();
   });
 
   document.addEventListener('keydown', (e) => {
